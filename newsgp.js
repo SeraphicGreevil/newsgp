@@ -65,9 +65,7 @@ PageLoader.prototype.run = function () {
     var self = this;
     pageLoading = false;
     self.loader.show();
-    console.log(self.href);
     $.get(self.href, function (data) {
-        console.log(self.href);
         if ((data === null) || (data == '')) {
             self.fallback(self.href);
         }
@@ -78,7 +76,7 @@ PageLoader.prototype.run = function () {
         self.loader.hide();
         pageLoading = true;
     });
-}
+};
 
 function tryLoadPage() {
     var nextLink = $(navigationPanel).find("a:contains(Next)");
@@ -87,7 +85,8 @@ function tryLoadPage() {
     }
 }
 
-function giveawayLoaded(link, obj) {
+function giveawayLoaded(href, obj) {
+    link = $("a[href='"+href+"']")
     form = null;
     if(obj.find(".sidebar__error.is-disabled").length > 0) {
     	form = obj.find(".sidebar__error.is-disabled")[0];
@@ -259,7 +258,7 @@ function reloadPages(startFrom) {
     if( prevElem.length !== 0 ) {
         href = prevElem.attr("data-loaded-from");
     }
-    new PageLoader(href, pageLoaded(data, href), function (href) { }, popupLoader).run();
+    new PageLoader(href, pageLoaded, function (href) { }, popupLoader).run();
 }
 
 (function (window) {
