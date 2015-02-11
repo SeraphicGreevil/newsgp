@@ -85,8 +85,7 @@ function tryLoadPage() {
     }
 }
 
-function giveawayLoaded(link, data) {
-    obj = $(data);
+function giveawayLoaded(link, obj) {
     form = null;
     if(obj.find(".sidebar__error.is-disabled").length > 0) {
     	form = obj.find(".sidebar__error.is-disabled")[0];
