@@ -67,6 +67,7 @@ PageLoader.prototype.run = function () {
     self.loader.show();
     console.log(self.href);
     $.get(self.href, function (data) {
+        console.log(self.href);
         if ((data === null) || (data == '')) {
             self.fallback(self.href);
         }
