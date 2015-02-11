@@ -14,7 +14,7 @@ function PopupLoader() {
 }
 
 PopupLoader.prototype.element = function () {
-    $("body").append('<div id="newsgpPopupLoader" class="popup"><p id="newsgpPopupHeading" class="popup__heading"></p></div>');
+    $("body").append('<div id="newsgpPopupLoader" class="popup"><p id="newsgpPopupHeading" class="popup__heading"></p><center><div><img src="' + image["loadinggif"] + '"></div></center></div>');
     return $("#newsgpPopupLoader");
 }();
 PopupLoader.prototype.popup = null;
