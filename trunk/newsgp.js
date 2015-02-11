@@ -85,8 +85,7 @@ function tryLoadPage() {
     }
 }
 
-function giveawayLoaded(href, obj) {
-    link = $.find("a[href='" + href + "']")[0];
+function giveawayLoaded(href, obj, link) {
     form = null;
     if(obj.find(".sidebar__error.is-disabled").length > 0) {
     	form = obj.find(".sidebar__error.is-disabled")[0];
@@ -142,7 +141,7 @@ function giveawayLoaded(href, obj) {
 
 function tryLoadGiveaway(link) {
     if (link != overlayOwner) {
-        new PageLoader(link.href, giveawayLoaded, function (href) { }, noLoader).run();
+        new PageLoader(link.href, function (href, obj) { giveawayLoaded(href, obj, link) }, function (href) { }, noLoader).run();
     }
     if(overlay !== null) {
         overlay.remove();
