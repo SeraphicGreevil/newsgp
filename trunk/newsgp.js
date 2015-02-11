@@ -86,7 +86,7 @@ function tryLoadPage() {
 }
 
 function giveawayLoaded(href, obj) {
-    link = $($.find("a[href='" + href + "']"));
+    link = $.find("a[href='" + href + "']");
     form = null;
     if(obj.find(".sidebar__error.is-disabled").length > 0) {
     	form = obj.find(".sidebar__error.is-disabled")[0];
