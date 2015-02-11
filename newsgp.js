@@ -22,15 +22,15 @@ PopupLoader.prototype.show = function () {
     if (this.refCounter == 0) {
         this.popup = this.element.bPopup();
     } else {
-        refCounter++;
+        this.refCounter++;
     }
 }
 
 PopupLoader.prototype.hide = function () {
     if (this.refCounter > 1) {
-        refCounter--;
+        this.refCounter--;
     } else if (this.refCounter == 1) {
-        refCounter--;
+        this.refCounter--;
         this.popup.close();
     }
 }
@@ -52,15 +52,15 @@ InlineLoader.prototype.show = function () {
     if (this.refCounter == 0) {
         this.element.show();
     } else {
-        refCounter++;
+        this.refCounter++;
     }
 }
 
 InlineLoader.prototype.hide = function () {
     if (this.refCounter > 1) {
-        refCounter--;
+        this.refCounter--;
     } else if (this.refCounter == 1) {
-        refCounter--;
+        this.refCounter--;
         this.element.hide();
     }
 }
