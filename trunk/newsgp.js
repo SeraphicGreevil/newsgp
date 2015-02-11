@@ -52,7 +52,7 @@ var noLoader = {
     show: function () { },
     hide: function () { },
     visible: function () { return false; }
-}
+};
 
 function PageLoader(href, callback, fallback, loader) {
     this.href = href;
@@ -65,7 +65,8 @@ PageLoader.prototype.run = function () {
     var self = this;
     pageLoading = false;
     self.loader.show();
-    $.get(this.href, function (data) {
+    console.log(self.href);
+    $.get(self.href, function (data) {
         if ((data === null) || (data == '')) {
             self.fallback(self.href);
         }
