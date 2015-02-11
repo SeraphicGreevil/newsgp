@@ -1,5 +1,4 @@
 var navigationPanel = null;
-var loader = null;
 var popup = null;
 var pageLoading = false;
 var overlay = null;
@@ -288,8 +287,6 @@ function reloadPages(startFrom) {
     $($.find(".page__inner-wrap:first")).css("maxWidth", "100%");
     navigationPanel = $.find(".pagination")[0];
     $(navigationPanel).hide();
-    $(navigationPanel).after('<div id="newSGPLoading" style="min-height: 40px; --webkit-vertical-align: middle;"><center><div style="display: inline-block;"><img src="'+image["loadinggif"]+'"></div></center></div>');
-    loader = $("#newSGPLoading");
     $(window).bind("scroll", function() {
         if( isElementVisible($.find(".widget-container.widget-container--margin-top:first")[0]) && !pageLoading ) {
             tryLoadPage();
