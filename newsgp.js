@@ -73,7 +73,11 @@ var popupLoader = new PopupLoader();
 var inlineLoader = new InlineLoader();
 
 function showLoader(state, doPopup) {
+    if (doPopup === null) {
+        doPopup = popup;
+    }
     var loader = (doPopup ? popupLoader : inlineLoader);
+    popup = doPopup;
     if(state) {
         pageLoading = true;
         loader.show();
