@@ -66,26 +66,21 @@ InlineLoader.prototype.visible = function () {
 var popupLoader = new PopupLoader();
 var inlineLoader = new InlineLoader();
 
-function showLoader(state, doPopup) {
-    if (doPopup === null) {
-        doPopup = popup;
-    }
-    var loader = (doPopup ? popupLoader : inlineLoader);
+function showLoader(doPopup) {
     popup = doPopup;
-    if(state) {
-        pageLoading = true;
-        loader.show();
-    }
-    else {
-        loader.hide();
-        pageLoading = false;
-    }
+    var loader = (doPopup ? popupLoader : inlineLoader);
+    loader.show();
+}
+
+function hideLoader() {
+    var loader = (popup ? popupLoader : inlineLoader);
+    loader.hide();
 }
 
 function tryLoadPage() {
     var nextLink = $(navigationPanel).find("a:contains(Next)");
     if(nextLink.length > 0) {
-        showLoader(true);
+        showLoader(false);
         $.get(nextLink[0].href, function(data)  {
             pageLoaded(data, nextLink[0].href);
         });
@@ -215,7 +210,7 @@ function pageLoaded(data, href) {
         $("#newSGPReplace").replaceWith(obj.find(".giveaway__row-outer-wrap"));
     }    
     navigationPanel = obj.find(".pagination:first")[0];
-    showLoader(false);
+    hideLoader();
     if(reloaded) {
         var nextLink = $(navigationPanel).find("a:contains(Next)");
     	if(nextLink.length > 0) {
@@ -265,7 +260,7 @@ function isElementVisible(obj) {
 }
 
 function reloadPages(startFrom) {
-    showLoader(true, true);
+    showLoader(true);
     href = startFrom;
     prevElem = $(".giveaway__row-outer-wrap[data-loaded-from='" + startFrom + "']:first").prev(".giveaway__row-outer-wrap");
     if( prevElem.length !== 0 ) {
