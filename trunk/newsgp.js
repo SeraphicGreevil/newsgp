@@ -21,16 +21,13 @@ PopupLoader.prototype.popup = null;
 PopupLoader.prototype.show = function () {
     if (this.refCounter == 0) {
         this.popup = this.element.bPopup();
-    } else {
-        this.refCounter++;
     }
+    this.refCounter++;
 }
 
 PopupLoader.prototype.hide = function () {
-    if (this.refCounter > 1) {
-        this.refCounter--;
-    } else if (this.refCounter == 1) {
-        this.refCounter--;
+    this.refCounter--;
+    if (this.refCounter == 0) {
         this.popup.close();
     }
 }
@@ -51,16 +48,13 @@ InlineLoader.prototype.element = function () {
 InlineLoader.prototype.show = function () {
     if (this.refCounter == 0) {
         this.element.show();
-    } else {
-        this.refCounter++;
     }
+    this.refCounter++;
 }
 
 InlineLoader.prototype.hide = function () {
-    if (this.refCounter > 1) {
-        this.refCounter--;
-    } else if (this.refCounter == 1) {
-        this.refCounter--;
+    this.refCounter--;
+    if (this.refCounter == 0) {
         this.element.hide();
     }
 }
