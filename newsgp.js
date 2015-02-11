@@ -15,7 +15,7 @@ PopupLoader.prototype.element = function () {
 }();
 PopupLoader.prototype.popup = null;
 
-PopupLoader.prototype.show() = function () {
+PopupLoader.prototype.show = function () {
     if (this.refCounter == 0) {
         this.popup = this.element.bPopup();
     } else {
@@ -23,7 +23,7 @@ PopupLoader.prototype.show() = function () {
     }
 }
 
-PopupLoader.prototype.hide() = function () {
+PopupLoader.prototype.hide = function () {
     if (this.refCounter > 1) {
         refCounter--;
     } else if (this.refCounter == 1) {
@@ -32,7 +32,7 @@ PopupLoader.prototype.hide() = function () {
     }
 }
 
-PopupLoader.prototype.visible() = function () {
+PopupLoader.prototype.visible = function () {
     return this.refCounter > 0;
 }
 
@@ -45,7 +45,7 @@ InlineLoader.prototype.element = function () {
     return $("#newsgpInlineLoader");
 }();
 
-InlineLoader.prototype.show() = function () {
+InlineLoader.prototype.show = function () {
     if (this.refCounter == 0) {
         this.element.show();
     } else {
@@ -53,7 +53,7 @@ InlineLoader.prototype.show() = function () {
     }
 }
 
-InlineLoader.prototype.hide() = function () {
+InlineLoader.prototype.hide = function () {
     if (this.refCounter > 1) {
         refCounter--;
     } else if (this.refCounter == 1) {
@@ -62,7 +62,7 @@ InlineLoader.prototype.hide() = function () {
     }
 }
 
-InlineLoader.prototype.visible() = function () {
+InlineLoader.prototype.visible = function () {
     return this.refCounter > 0;
 }
 
