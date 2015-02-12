@@ -91,7 +91,7 @@ var pageLoader = {
     },
     _run: function () {
         var self = this;
-        self._current = _queue.shift();
+        self._current = self._queue.shift();
         request.loader.show();
         $.get(request.href, function (data) {
             if ((data === null) || (data == '')) {
