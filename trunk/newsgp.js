@@ -63,8 +63,8 @@ var newsgp = {
 function Request(href, callback, fallback, loader) {
     this.href = href;
     this.callback = callback;
-    this.fallback = fallback || new function (href) {};
-    this.loader = loader || newsgp.loaders.no;
+    this.fallback = fallback;
+    this.loader = loader;
 }
 
 var pageLoader = {
@@ -111,7 +111,7 @@ var pageLoader = {
 function tryLoadPage() {
     var nextLink = $(navigationPanel).find("a:contains(Next)");
     if (nextLink.length > 0) {
-        pageLoader.add(new Request(nextLink[0].href, pageLoaded, null, newsgp.loaders.inline));
+        pageLoader.add(new Request(nextLink[0].href, pageLoaded, function (href) { }, newsgp.loaders.inline));
     }
 }
 
@@ -172,7 +172,7 @@ function giveawayLoaded(href, obj, link) {
 
 function tryLoadGiveaway(link) {
     if (link != overlayOwner) {
-        pageLoader.add(link.href, function (href, obj) { giveawayLoaded(href, obj, link) });
+        pageLoader.add(link.href, function (href, obj) { giveawayLoaded(href, obj, link) }, function (href) { }, newsgp.loaders.inline);
     }
     if(overlay !== null) {
         overlay.remove();
