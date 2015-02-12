@@ -172,7 +172,7 @@ function giveawayLoaded(href, obj, link) {
 
 function tryLoadGiveaway(link) {
     if (link != overlayOwner) {
-        pageLoader.add(link.href, function (href, obj) { giveawayLoaded(href, obj, link) }, function (href) { }, newsgp.loaders.no);
+        pageLoader.add(new Request(link.href, function (href, obj) { giveawayLoaded(href, obj, link) }, function (href) { }, newsgp.loaders.no));
     }
     if(overlay !== null) {
         overlay.remove();
@@ -276,7 +276,7 @@ function reloadPages(startFrom) {
     if( prevElem.length !== 0 ) {
         href = prevElem.attr("data-loaded-from");
     }
-    pageLoader.add(href, pageLoaded, function (href) { $(".giveaway__row-outer-wrap[data-loaded-from='" + href + "']").remove(); }, newsgp.loaders.popup);
+    pageLoader.add(new Request(href, pageLoaded, function (href) { $(".giveaway__row-outer-wrap[data-loaded-from='" + href + "']").remove(); }, newsgp.loaders.popup));
 }
 
 (function (window) {
