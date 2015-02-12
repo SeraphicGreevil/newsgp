@@ -72,15 +72,16 @@ var pageLoader = {
         if (!this._contains(request)) {
             this._queue.push(request);
         }
-        if (this._queue.length == 1) {
-            _run();
+        if (_current == null) {
+            this._run();
         }
     },
-    working: function () {
-        return this._queue.length > 0;
-    },
+    _current: null,
     _queue: [],
     _contains: function (request) {
+        if (_current.href == request.href) {
+            return true;
+        }
         for (var i = 0; i < this._queue.length; ++i) {
             if (this._queue[i].href == request.href) {
                 return true;
@@ -90,7 +91,7 @@ var pageLoader = {
     },
     _run: function () {
         var self = this;
-        var request = self._queue[0];
+        self._current = _queue.shift();
         request.loader.show();
         $.get(request.href, function (data) {
             if ((data === null) || (data == '')) {
@@ -99,9 +100,8 @@ var pageLoader = {
                 request.callback(request.href, $(data));
             }
             request.loader.hide();
-            self._queue.shift();
-            if (this.working()) {
-                _run();
+            if (self._queue.length > 0) {
+                self._run();
             }
         });
     }
