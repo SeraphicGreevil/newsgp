@@ -13,7 +13,7 @@ var newsgp = {
     loaders: {
         popup: {
             refCounter: 0,
-            element: $('<div class="popup"><p class="popup__heading"></p><center><div><i class="fa fa-refresh fa-spin"></i></div></center></div>').appendTo("body"),
+            element: $('<div class="popup"><p class="popup__heading"></p><center><div><i class="fa fa-refresh fa-spin fa-3x"></i></div></center></div>').appendTo("body"),
             popup: null,
             show: function () {
                 if (this.refCounter == 0) {
@@ -34,7 +34,7 @@ var newsgp = {
 
         inline: {
             refCounter: 0,
-            element: $('<div style="min-height: 40px; --webkit-vertical-align: middle;"><center><div style="display: inline-block;"><i class="fa fa-refresh fa-spin"></i></div></center></div>').insertAfter(".pagination:first"),
+            element: $('<div style="min-height: 40px; --webkit-vertical-align: middle;"><center><div style="display: inline-block;"><i class="fa fa-refresh fa-spin fa-3x"></i></div></center></div>').insertAfter(".pagination:first"),
             show: function () {
                 if (this.refCounter == 0) {
                     this.element.show();
