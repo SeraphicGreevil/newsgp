@@ -100,6 +100,7 @@ var pageLoader = {
                 self._current.callback(self._current.href, $(data));
             }
             self._current.loader.hide();
+            self._current = null;
             if (self._queue.length > 0) {
                 self._run();
             }
