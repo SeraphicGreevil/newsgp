@@ -70,7 +70,7 @@ function Request(href, callback, fallback, loader) {
 var pageLoader = {
     add: function (request) {
         if (!this._contains(request)) {
-            this._queue.add(request);
+            this._queue.push(request);
         }
         if (this._queue.length == 1) {
             _run();
