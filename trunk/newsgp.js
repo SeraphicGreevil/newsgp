@@ -172,7 +172,7 @@ function giveawayLoaded(href, obj, link) {
 
 function tryLoadGiveaway(link) {
     if (link != overlayOwner) {
-        pageLoader.add(link.href, function (href, obj) { giveawayLoaded(href, obj, link) }, function (href) { }, newsgp.loaders.inline);
+        pageLoader.add(link.href, function (href, obj) { giveawayLoaded(href, obj, link) }, function (href) { }, newsgp.loaders.no);
     }
     if(overlay !== null) {
         overlay.remove();
