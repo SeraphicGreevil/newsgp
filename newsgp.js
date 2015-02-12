@@ -110,7 +110,7 @@ var pageLoader = {
 function tryLoadPage() {
     var nextLink = $(navigationPanel).find("a:contains(Next)");
     if (nextLink.length > 0) {
-        pageLoader.add(new Request(nextLink.href, pageLoaded, null, newsgp.loaders.inline));
+        pageLoader.add(new Request(nextLink[0].href, pageLoaded, null, newsgp.loaders.inline));
     }
 }
 
