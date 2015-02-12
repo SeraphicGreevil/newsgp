@@ -7,6 +7,9 @@ var image = {
 }
 
 var newsgp = {
+    navigationPanel: {
+
+        },
     loaders: {
         popup: {
             refCounter: 0,
@@ -57,36 +60,57 @@ var newsgp = {
     }
 };
 
-function PageLoader(href, callback, fallback, loader) {
+function Request(href, callback, fallback, loader) {
     this.href = href;
     this.callback = callback;
-    this.fallback = fallback;
-    this.loader = loader;
+    this.fallback = fallback || new function (href) {};
+    this.loader = loader || newsgp.loaders.no;
 }
 
-PageLoader.prototype.working = false;
-
-PageLoader.prototype.run = function () {
-    var self = this;
-    self.working = true;
-    self.loader.show();
-    $.get(self.href, function (data) {
-        if ((data === null) || (data == '')) {
-            self.fallback(self.href);
+var pageLoader = {
+    add: function (request) {
+        if (!this._contains(request)) {
+            this.queue.add(request);
         }
-        else {
-            var obj = $(data);
-            self.callback(self.href, obj);
+        if (this._queue.length == 1) {
+            _run();
         }
-        self.loader.hide();
-        self.working = false;
-    });
+    },
+    working: function () {
+        return this._queue.length > 0;
+    },
+    _queue: [],
+    _contains: function (request) {
+        for (var i = 0; i < this.queue.length; ++i) {
+            if (this.queue[i].href == request.href) {
+                return true;
+            }
+        }
+        return false;
+    },
+    _run: function () {
+        var self = this;
+        var request = self.queue[0];
+        request.loader.show();
+        $.get(request.href, function (data) {
+            if ((data === null) || (data == '')) {
+                request.fallback(request.href);
+            } else {
+                request.callback(request.href, $(data));
+            }
+            request.loader.hide();
+            self.queue.shift();
+            if (this.working()) {
+                _run();
+            }
+        });
+    }
 };
 
 function tryLoadPage() {
     var nextLink = $(navigationPanel).find("a:contains(Next)");
     if (nextLink.length > 0) {
-        new PageLoader(nextLink[0].href, pageLoaded, function (href) { }, newsgp.loaders.inline).run();
+        pageLoader.add(new Request(nextLink, pageLoaded, null, newsgp.loaders.inline));
     }
 }
 
@@ -96,9 +120,9 @@ function giveawayLoaded(href, obj, link) {
     	form = obj.find(".sidebar__error.is-disabled")[0];
     }
     else {
-        form = obj.find(".sidebar > form")[0];
-        $($(form).find(".sidebar__entry-insert, .sidebar__entry-delete")).click(function() {
-            var e=$(this);
+        form = obj.find(".sidebar:first > form");
+        $(form).find(".sidebar__entry-insert, .sidebar__entry-delete").click(function() {
+            var e = $(this);
             e.addClass("is-hidden");
             e.closest("form").find(".sidebar__entry-loading").removeClass("is-hidden");
             e.closest("form").find("input[name=do]").val(e.attr("data-do"));
@@ -147,7 +171,7 @@ function giveawayLoaded(href, obj, link) {
 
 function tryLoadGiveaway(link) {
     if (link != overlayOwner) {
-        new PageLoader(link.href, function (href, obj) { giveawayLoaded(href, obj, link) }, function (href) { }, newsgp.loaders.no).run();
+        pageLoader.add(link.href, function (href, obj) { giveawayLoaded(href, obj, link) });
     }
     if(overlay !== null) {
         overlay.remove();
@@ -251,7 +275,7 @@ function reloadPages(startFrom) {
     if( prevElem.length !== 0 ) {
         href = prevElem.attr("data-loaded-from");
     }
-    new PageLoader(href, pageLoaded, function (href) { $(".giveaway__row-outer-wrap[data-loaded-from='" + href + "']").remove(); }, newsgp.loaders.popup).run();
+    pageLoader.add(href, pageLoaded, function (href) { $(".giveaway__row-outer-wrap[data-loaded-from='" + href + "']").remove(); }, newsgp.loaders.popup);
 }
 
 (function (window) {
@@ -264,7 +288,7 @@ function reloadPages(startFrom) {
     navigationPanel = $.find(".pagination")[0];
     $(navigationPanel).hide();
     $(window).bind("scroll", function() {
-        if( isElementVisible($.find(".widget-container.widget-container--margin-top:first")[0]) && !PageLoader.prototype.working ) {
+        if( isElementVisible($.find(".widget-container.widget-container--margin-top:first")[0]) ) {
             tryLoadPage();
         }
     });
