@@ -81,8 +81,8 @@ var pageLoader = {
     },
     _queue: [],
     _contains: function (request) {
-        for (var i = 0; i < this.queue.length; ++i) {
-            if (this.queue[i].href == request.href) {
+        for (var i = 0; i < this._queue.length; ++i) {
+            if (this._queue[i].href == request.href) {
                 return true;
             }
         }
@@ -99,7 +99,7 @@ var pageLoader = {
                 request.callback(request.href, $(data));
             }
             request.loader.hide();
-            self.queue.shift();
+            self._queue.shift();
             if (this.working()) {
                 _run();
             }
