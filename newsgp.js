@@ -95,9 +95,9 @@ var pageLoader = {
         self._current.loader.show();
         $.get(self._current.href, function (data) {
             if ((data === null) || (data == '')) {
-                self._current.fallback(request.href);
+                self._current.fallback(self._current.href);
             } else {
-                self._current.callback(request.href, $(data));
+                self._current.callback(self._current.href, $(data));
             }
             self._current.loader.hide();
             if (self._queue.length > 0) {
