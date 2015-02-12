@@ -72,14 +72,14 @@ var pageLoader = {
         if (!this._contains(request)) {
             this._queue.push(request);
         }
-        if (_current == null) {
+        if (this._current == null) {
             this._run();
         }
     },
     _current: null,
     _queue: [],
     _contains: function (request) {
-        if (_current.href == request.href) {
+        if (this._current.href == request.href) {
             return true;
         }
         for (var i = 0; i < this._queue.length; ++i) {
