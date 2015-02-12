@@ -92,14 +92,14 @@ var pageLoader = {
     _run: function () {
         var self = this;
         self._current = self._queue.shift();
-        request.loader.show();
-        $.get(request.href, function (data) {
+        self._current.loader.show();
+        $.get(self._current.href, function (data) {
             if ((data === null) || (data == '')) {
-                request.fallback(request.href);
+                self._current.fallback(request.href);
             } else {
-                request.callback(request.href, $(data));
+                self._current.callback(request.href, $(data));
             }
-            request.loader.hide();
+            self._current.loader.hide();
             if (self._queue.length > 0) {
                 self._run();
             }
