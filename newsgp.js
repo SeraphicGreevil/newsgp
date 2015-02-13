@@ -1,15 +1,65 @@
-var navigationPanel = null;
 var overlay = null;
 var overlayOwner = null;
 
 var newsgp = {
-    navigationPanel: {
-
+    pageLoader: {
+        add: function (request) {
+            if (!this._contains(request)) {
+                this._queue.push(request);
+            }
+            if (this._current == null) {
+                this._run();
+            }
         },
+        _current: null,
+        _queue: [],
+        _contains: function (request) {
+            if ((this._current !== null) && (this._current.href == request.href)) {
+                return true;
+            }
+            for (var i = 0; i < this._queue.length; ++i) {
+                if (this._queue[i].href == request.href) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        _run: function () {
+            var self = this;
+            self._current = self._queue.shift();
+            self._current.loader.show();
+            $.get(self._current.href, function (data) {
+                if ((data === null) || (data == '')) {
+                    self._current.fallback(self._current.href);
+                } else {
+                    self._current.callback(self._current.href, $(data));
+                }
+                self._current.loader.hide();
+                self._current = null;
+                if (self._queue.length > 0) {
+                    self._run();
+                }
+            });
+        }
+    },
+
+    navigation: {
+        reset: function (panel) {
+            this._panel = panel;
+        },
+        next: function () {
+            return this._panel.find("a:contains(Next)").attr("href");
+        },
+        hasNext: function () {
+            return this._panel.find("a:contains(Next)").length > 0;
+        },
+        _panel: null        
+    },
+
     loaders: {
         popup: {
             refCounter: 0,
-            element: $('<div class="popup"><p class="popup__heading"></p><center><div><i class="fa fa-refresh fa-spin" style="font-size: 40px; font-weight: 100; color: rgb(70, 86, 112);"></i></div></center></div>').appendTo("body"),
+            element: $('<div class="popup"><center><div><i class="fa fa-refresh fa-spin" style="font-size: 40px; font-weight: 100; color: rgb(70, 86, 112);"></i></div></center></div>').appendTo("body"),
             popup: null,
             show: function () {
                 if (this.refCounter == 0) {
@@ -53,6 +103,21 @@ var newsgp = {
             hide: function () { },
             visible: function () { return false; }
         }
+    },
+
+    giveaway: {
+        element: $('<div class="popup"><p class="popup__heading"></p><center><div></div><div id=""></div></center></div>').appendTo("body"),
+        popup: null,
+        show: function (heading, link, form) {
+            this.element.find("p").text(heading);
+            link.appendTo(this.element.find("center > div:first"));
+            form.appendTo(this.element.find("center > div:last"));
+            this.popup = this.element.bPopup();
+        },
+        hide: function () {
+            this.popup.close();
+            this.element.find("center > div").empty();
+        }
     }
 };
 
@@ -61,53 +126,12 @@ function Request(href, callback, fallback, loader) {
     this.callback = callback;
     this.fallback = fallback;
     this.loader = loader;
+    newsgp.pageLoader.add(this);
 }
 
-var pageLoader = {
-    add: function (request) {
-        if (!this._contains(request)) {
-            this._queue.push(request);
-        }
-        if (this._current == null) {
-            this._run();
-        }
-    },
-    _current: null,
-    _queue: [],
-    _contains: function (request) {
-        if ((this._current !== null) && (this._current.href == request.href)) {
-            return true;
-        }
-        for (var i = 0; i < this._queue.length; ++i) {
-            if (this._queue[i].href == request.href) {
-                return true;
-            }
-        }
-        return false;
-    },
-    _run: function () {
-        var self = this;
-        self._current = self._queue.shift();
-        self._current.loader.show();
-        $.get(self._current.href, function (data) {
-            if ((data === null) || (data == '')) {
-                self._current.fallback(self._current.href);
-            } else {
-                self._current.callback(self._current.href, $(data));
-            }
-            self._current.loader.hide();
-            self._current = null;
-            if (self._queue.length > 0) {
-                self._run();
-            }
-        });
-    }
-};
-
 function tryLoadPage() {
-    var nextLink = $(navigationPanel).find("a:contains(Next)");
-    if (nextLink.length > 0) {
-        pageLoader.add(new Request(nextLink[0].href, pageLoaded, function (href) { }, newsgp.loaders.inline));
+    if (newsgp.navigation.hasNext()) {
+        new Request(nextLink[0].href, pageLoaded, function (href) { }, newsgp.loaders.inline);
     }
 }
 
@@ -154,6 +178,10 @@ function giveawayLoaded(href, obj, link) {
             });
         });
     }
+    newsgp.giveaway.popup.show($(link).parent(".giveaway__row-outer-wrap").find(".giveaway__heading__name").text(),
+        $(link),
+        form);
+    /*
     $(link).after("<div id='newSGPOverlay'></div>");
     overlay = $("#newSGPOverlay");
     overlay.append(form);
@@ -163,12 +191,12 @@ function giveawayLoaded(href, obj, link) {
     offs.left = bounds.left + (bounds.width - overlay.width()) / 2;
     overlay.offset(offs);
     overlay.animate({ 'top': bounds.top + bounds.height + 5, 'opacity': '1' }, 200);
-    overlayOwner = link;
+    overlayOwner = link;*/
 }
 
 function tryLoadGiveaway(link) {
     if (link != overlayOwner) {
-        pageLoader.add(new Request(link.href, function (href, obj) { giveawayLoaded(href, obj, link) }, function (href) { }, newsgp.loaders.no));
+        new Request(link.href, function (href, obj) { giveawayLoaded(href, obj, link) }, function (href) { }, newsgp.loaders.no);
     }
     if(overlay !== null) {
         overlay.remove();
@@ -178,8 +206,8 @@ function tryLoadGiveaway(link) {
 }
 
 function processPage(obj, href) {
-    $(obj.find(".giveaway__heading__name, .giveaway__columns, .giveaway__links, .giveaway__row-inner-wrap > .global__image-outer-wrap.global__image-outer-wrap--avatar-small")).css("display", "none");
-    $(obj.find(".giveaway__heading__thin")).css("display", "none");
+    $(obj.find(".giveaway__heading__name, .giveaway__columns, .giveaway__links, .giveaway__row-inner-wrap > .global__image-outer-wrap.global__image-outer-wrap--avatar-small")).hide();
+    $(obj.find(".giveaway__heading__thin")).hide();
     $(obj.find(".fa.fa-steam")).css({"position": "relative", "top": "-15px", "left": "20px"});
     $(obj.find(".giveaway__icon.giveaway__hide.trigger-popup.fa.fa-eye-slash")).css({"position": "relative", "top": "15px"});
     $(obj.find(".giveaway__row-outer-wrap")).css("display", "inline-block").attr("data-loaded-from", href);
@@ -217,7 +245,7 @@ function pageLoaded(href, obj) {
     if($.find(".giveaway__row-outer-wrap[data-loaded-from='" + href + "']").length === 0)
     {
         //add giveaways
-    	$($.find(".giveaway__row-outer-wrap:last")[0]).after(obj.find(".giveaway__row-outer-wrap"));
+    	$.find(".giveaway__row-outer-wrap:last").after(obj.find(".giveaway__row-outer-wrap"));
     }
     else
     {
@@ -228,14 +256,9 @@ function pageLoaded(href, obj) {
         //add giveaways
         $("#newSGPReplace").replaceWith(obj.find(".giveaway__row-outer-wrap"));
     }    
-    navigationPanel = obj.find(".pagination:first")[0];
-    if(reloaded) {
-        var nextLink = $(navigationPanel).find("a:contains(Next)");
-    	if(nextLink.length > 0) {
-            if($.find(".giveaway__row-outer-wrap[data-loaded-from='" + nextLink[0].href + "']").length > 0) {
-                tryLoadPage();
-            }
-        }
+    newsgp.navigation.reset(obj.find(".pagination:first"));
+    if (reloaded && newsgp.navigation.hasNext() && ($(".giveaway__row-outer-wrap[data-loaded-from='" + newsgp.navigation.next() + "']").length > 0)) {
+        tryLoadPage();
     }
 }
 
@@ -271,7 +294,7 @@ function reloadPages(startFrom) {
     if( prevElem.length !== 0 ) {
         href = prevElem.attr("data-loaded-from");
     }
-    pageLoader.add(new Request(href, pageLoaded, function (href) { $(".giveaway__row-outer-wrap[data-loaded-from='" + href + "']").remove(); }, newsgp.loaders.popup));
+    new Request(href, pageLoaded, function (href) { $(".giveaway__row-outer-wrap[data-loaded-from='" + href + "']").remove(); }, newsgp.loaders.popup);
 }
 
 (function (window) {
@@ -287,14 +310,14 @@ function reloadPages(startFrom) {
     }
     $(".giveaway__hide").unbind('click');
     processPage($, window.location.href);
-    $($.find(".page__inner-wrap:first")).css("maxWidth", "100%");
-    navigationPanel = $.find(".pagination")[0];
-    $(navigationPanel).hide();
+    $(".page__inner-wrap:first").css("maxWidth", "100%");
+    newsgp.navigation.reset($(".pagination").hide());
     $(window).bind("scroll", function() {
-        if( isElementVisible($.find(".widget-container.widget-container--margin-top:first")[0]) ) {
+        if( isElementVisible($(".widget-container.widget-container--margin-top:first")[0]) ) {
             tryLoadPage();
         }
     });
+    $("")
     //hide giveaways without page reloading
     /*$(".js__submit-form").unbind('click').click(function() {
         if($(this).hasClass("js__edit-giveaway")) {
@@ -305,7 +328,7 @@ function reloadPages(startFrom) {
                url: window.location.href,
                data: $(this).closest("form").serialize(), // serializes the form's elements.
                success: function(data) {
-                   $($.find(".popup__actions > .b-close")).trigger("click");
+                   $(".popup__actions > .b-close").trigger("click");
                    reloadPages(window.location.href);
                }
              });
