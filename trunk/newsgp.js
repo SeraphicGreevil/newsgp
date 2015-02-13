@@ -178,7 +178,7 @@ function giveawayLoaded(href, obj, link) {
             });
         });
     }
-    newsgp.giveaway.popup.show($(link).parent(".giveaway__row-outer-wrap").find(".giveaway__heading__name").text(),
+    newsgp.giveaway.show($(link).parent(".giveaway__row-outer-wrap").find(".giveaway__heading__name").text(),
         $(link),
         form);
     /*
