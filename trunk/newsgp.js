@@ -131,7 +131,7 @@ function Request(href, callback, fallback, loader) {
 
 function tryLoadPage() {
     if (newsgp.navigation.hasNext()) {
-        new Request(nextLink[0].href, pageLoaded, function (href) { }, newsgp.loaders.inline);
+        new Request(newsgp.navigation.next(), pageLoaded, function (href) { }, newsgp.loaders.inline);
     }
 }
 
@@ -178,7 +178,7 @@ function giveawayLoaded(href, obj, link) {
             });
         });
     }
-    newsgp.giveaway.show($(link).parent(".giveaway__row-outer-wrap").find(".giveaway__heading__name").text(),
+    newsgp.giveaway.show($(link).nearest(".giveaway__row-outer-wrap").find(".giveaway__heading__name").text(),
         $(link),
         form);
     /*
