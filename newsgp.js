@@ -106,18 +106,17 @@ var newsgp = {
     },
 
     giveaway: {
-        element: $('<div class="popup"><p class="popup__heading"></p><center><div></div></center><p class="popup__actions"><span class="b-close">Close</span></p></div>').appendTo("body"),
+        element: $('<div class="popup"><p class="popup__heading"></p><center><div></div><div style="margin: 10px;"></div></center></div>').appendTo("body"),
         popup: null,
         show: function (heading, link, form) {
             var self = this;
             self.element.find(".popup__heading").text(heading);
             link.appendTo(self.element.find("center > div:first"));
-            form.prependTo(self.element.find(".popup__actions"));
+            form.prependTo(self.element.find("center > div:last"));
             self.popup = self.element.bPopup({
                 closeClass: "b-close",
                 onClose: function () {
                     self.element.find("center > div").empty();
-                    self.element.find(".popup__actions:first-child").remove();
                 }
             });
         },
