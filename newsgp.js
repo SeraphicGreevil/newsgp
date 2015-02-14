@@ -112,11 +112,14 @@ var newsgp = {
             this.element.find(".popup__heading").text(heading);
             link.appendTo(this.element.find("center > div:first"));
             form.appendTo(this.element.find("center > div:last"));
-            this.popup = this.element.bPopup();
+            this.popup = this.element.bPopup({
+                onClose: function () {
+                    this.element.find("center > div").empty();
+                }
+            });
         },
         hide: function () {
             this.popup.close();
-            this.element.find("center > div").empty();
         }
     }
 };
