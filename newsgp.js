@@ -183,8 +183,8 @@ function giveawayLoaded(href, obj, link) {
                 }
             });
         });
-    }
-    newsgp.giveaway.show(find(".giveaway__heading__name").text(),
+    }    
+    newsgp.giveaway.show($(link).closest(".giveaway__row-outer-wrap").find(".giveaway__heading__name").text(),
         $(link).clone().unbind('click'),
         form);
     /*
