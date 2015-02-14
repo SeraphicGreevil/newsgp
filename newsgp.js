@@ -106,16 +106,18 @@ var newsgp = {
     },
 
     giveaway: {
-        element: $('<div class="popup"><p class="popup__heading"></p><center><div></div><p class="popup__actions"><div></div></p></center></div>').appendTo("body"),
+        element: $('<div class="popup"><p class="popup__heading"></p><center><div></div></center><p class="popup__actions"><span class="b-close">Close</span></p></div>').appendTo("body"),
         popup: null,
         show: function (heading, link, form) {
             var self = this;
             self.element.find(".popup__heading").text(heading);
             link.appendTo(self.element.find("center > div:first"));
-            form.appendTo(self.element.find("center > div:last"));
+            form.prependTo(self.element.find(".popup__actions"));
             self.popup = self.element.bPopup({
+                closeClass: "b-close",
                 onClose: function () {
                     self.element.find("center > div").empty();
+                    self.element.find(".popup__actions:first-child").remove();
                 }
             });
         },
@@ -182,7 +184,7 @@ function giveawayLoaded(href, obj, link) {
             });
         });
     }
-    newsgp.giveaway.show($(link).closest(".giveaway__row-outer-wrap").find(".giveaway__heading__name").text(),
+    newsgp.giveaway.show(find(".giveaway__heading__name").text(),
         $(link).clone().unbind('click'),
         form);
     /*
