@@ -242,10 +242,10 @@ function processPage(obj, href) {
 function pageLoaded(href, obj) {
     var reloaded = false;
     obj = processPage(obj, href);
-    if($.find(".giveaway__row-outer-wrap[data-loaded-from='" + href + "']").length === 0)
+    if($(".giveaway__row-outer-wrap[data-loaded-from='" + href + "']").length === 0)
     {
         //add giveaways
-    	$.find(".giveaway__row-outer-wrap:last").after(obj.find(".giveaway__row-outer-wrap"));
+    	$(".giveaway__row-outer-wrap:last").after(obj.find(".giveaway__row-outer-wrap"));
     }
     else
     {
