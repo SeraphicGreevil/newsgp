@@ -109,7 +109,7 @@ var newsgp = {
         element: $('<div class="popup"><p class="popup__heading"></p><center><div></div><p class="popup__actions"><div></div></p></center></div>').appendTo("body"),
         popup: null,
         show: function (heading, link, form) {
-            this.element.find("p").text(heading);
+            this.element.find(".popup__heading").text(heading);
             link.appendTo(this.element.find("center > div:first"));
             form.appendTo(this.element.find("center > div:last"));
             this.popup = this.element.bPopup();
