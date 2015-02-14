@@ -106,7 +106,7 @@ var newsgp = {
     },
 
     giveaway: {
-        element: $('<div class="popup"><p class="popup__heading"></p><center><div></div><div id=""></div></center></div>').appendTo("body"),
+        element: $('<div class="popup"><p class="popup__heading"></p><center><div></div><p class="popup__actions"><div></div></p></center></div>').appendTo("body"),
         popup: null,
         show: function (heading, link, form) {
             this.element.find("p").text(heading);
@@ -179,7 +179,7 @@ function giveawayLoaded(href, obj, link) {
         });
     }
     newsgp.giveaway.show($(link).closest(".giveaway__row-outer-wrap").find(".giveaway__heading__name").text(),
-        $(link),
+        $(link).clone().unbind('click'),
         form);
     /*
     $(link).after("<div id='newSGPOverlay'></div>");
