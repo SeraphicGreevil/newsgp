@@ -142,7 +142,7 @@ function tryLoadPage() {
 function giveawayLoaded(href, obj, link) {
     form = null;
     if(obj.find(".sidebar__error.is-disabled").length > 0) {
-    	form = obj.find(".sidebar__error.is-disabled")[0];
+    	form = obj.find(".sidebar__error.is-disabled");
     }
     else {
         form = obj.find(".sidebar:first > form");
