@@ -216,7 +216,7 @@ function processPage(obj, href) {
     $(obj.find(".fa.fa-steam")).css({"position": "relative", "top": "-15px", "left": "20px"});
     $(obj.find(".giveaway__icon.giveaway__hide.trigger-popup.fa.fa-eye-slash")).css({"position": "relative", "top": "15px"});
     $(obj.find(".giveaway__row-outer-wrap")).css("display", "inline-block").attr("data-loaded-from", href);
-    $(obj.find(".giveaway__row-outer-wrap")).has("i.fa.fa-fw.fa-globe").css({"background-color": "bisque"});
+    $(obj.find(".giveaway__row-outer-wrap")).has("i.fa.fa-fw.fa-globe").find(".global__image-outer-wrap").css({"background-color": "bisque"});
     //hide giveaways without popup
     $(obj.find(".giveaway__hide")).removeClass("trigger-popup").click( function() {
         elem = $(this);
