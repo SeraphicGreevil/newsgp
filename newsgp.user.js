@@ -1,3 +1,8 @@
+// ==UserScript==
+// @name NewSGP
+// @include http://www.steamgifts.com/
+// ==/UserScript==
+
 var overlay = null;
 var overlayOwner = null;
 
